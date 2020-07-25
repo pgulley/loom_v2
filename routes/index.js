@@ -3,13 +3,19 @@ var router = express.Router();
 
 var models = require("../models.js")
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
 
-	//find all, for now. 
-	models.StoryModel.find({}).exec(function(err, docs){
-		res.render('index', { title: 'home', Story_List:docs });
-	})
-});
+function getIndexRouter(io){
+	//get the index page
+	router.get('/', function(req, res, next) {
 
-module.exports = router;
+		//find all, for now. 
+		models.StoryModel.find({}).exec(function(err, docs){
+			res.render('index', { title: 'home', Story_List:docs });
+		})
+	});
+
+	return router
+
+}
+
+module.exports = getIndexRouter;
