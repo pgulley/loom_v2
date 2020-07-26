@@ -56,17 +56,4 @@ function processPassage(passage){
 	})
 }
 
-
-fs.readFile("twines/twine.html", "utf8", function(err, data){
-	if(err){
-		console.log(err)
-	}
-	else{
-		processTwine(data, function(processed){
-			new_story = new models.StoryModel(processed)
-			console.log(new_story._id)
-			new_story.save()
-		})
-	}
-	
-})
+module.exports = processTwine

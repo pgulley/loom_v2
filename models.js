@@ -36,6 +36,7 @@ const StoryModel = mongoose.model("Story", StorySchema)
 const ClientSchema = new mongoose.Schema({
 	story: mongoose.ObjectId,
 	user: mongoose.ObjectId,
+	session: String,
 	current_passage_id: String,
 	story_vars: String
 })
@@ -45,10 +46,11 @@ const ClientModel = mongoose.model("Client", ClientSchema)
 
 //Event Model just tracks story events as they occur.
 const EventSchema = new mongoose.Schema({
-	story: mongoose.ObjectId,
-	client: mongoose.ObjectId,
+	story_id: mongoose.ObjectId,
+	client_id: mongoose.ObjectId,
 	time: mongoose.Date,
-	name: String
+	new_passage_id: String,
+	old_passage_id: String
 })
 
 const EventModel = mongoose.model("Event", EventSchema)
@@ -65,7 +67,9 @@ const UserSchema = new mongoose.Schema({
 	admin:Boolean
 })
 
+const UserModel = mongoose.model("User", UserSchema)
 
 exports.StoryModel = StoryModel
 exports.ClientModel = ClientModel
 exports.EventModel = EventModel
+exports.UserModel = UserModel

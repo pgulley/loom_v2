@@ -10,7 +10,7 @@ function getTwineRouter(io,sharedsession){
 
 	/* GET users listing. */
 	router.get('/:twine_id', function(req, res, next) {
-		console.log(req.session)
+		console.log(req.cookies['io'])
 		models.StoryModel.find({_id:req.params.twine_id}).exec(function(err, doc){
 			if(err | doc.length == 0){
 				res.sendStatus(404)
@@ -43,13 +43,68 @@ function getTwineRouter(io,sharedsession){
 	twine_sockets = io.of(/^\/tw\/\S+/gm)
 	twine_sockets.use(sharedsession)
 	twine_sockets.on("connection", function(socket){
-		//the client is uniquely defined by the story id and the user id- 
-		// the user id is isomorphic with the session id
-		// so if the session id is in the socket def
-		// we can identify and or create a client here , and send it back to the browser
+
 		var story_id = socket.nsp.name.split("/")[2]
-		console.log(socket.handshake.session)
-		console.log(story_id)
+		var session_id = socket.handshake.sessionID 
+		//IF socket.handshake.session is Logged In:
+		// get the client for this story and that user id ##A stub until the user profiles are built out
+		//ELSE:
+		// get the client for this story and that session id
+		models.ClientModel.findOne({session:socket.handshake.sessionID, story_id:story_id}, function(err, docs){
+			if(err){
+				console.log(err)
+			}
+			if(docs==null){
+				client = new models.ClientModel({story:story_id, session:session_id, current_passage_id:"null"})
+				client.save()
+				twine_sockets.emit("connect_ok", client)
+			}
+			else{
+
+			}
+			
+		})
+
+		socket.on("nav_event", function(event){
+			//store the nav event 
+			ev = new models.EventModel(event)
+			ev.save()
+
+			//grab the client and update it
+			models.ClientModel.findOne({_id:event.client_id}, function(err, this_client){
+				if(err){console.log(err)}
+				
+
+				//find all the other clients at this location
+				models.ClientModel.find({current_passage_id:event.new_passage_id}).exec(function(err, others){
+					if(err){console.log(err)}
+					socket.emit("nav_event_follow_up",others)
+
+					this_client.current_passage_id = event.new_passage_id
+					this_client.save()
+
+
+					//update client room membership
+					socket.leave(event.old_passage_id)
+					socket.join(event.new_passage_id)
+
+					//send update events to appropriate rooms. 
+					socket.to(event.old_passage_id).emit("client_leaves", this_client)
+					socket.to(event.new_passage_id).emit("client_arrives", this_client)
+
+				})	
+			})	
+		})
+
+		socket.on("disconnect", function(event){
+			var session_id = socket.handshake.sessionID
+			models.ClientModel.findOne({session:socket.handshake.sessionID}, function(err, client){
+				//maybe also throw in an event for good measure?
+
+				client.current_passage_id = "None"
+				client.save()
+			})
+		})
 
 	})
 

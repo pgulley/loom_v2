@@ -14,11 +14,6 @@ var http = require('http')
 
 
 var app = express();
-var server = http.createServer(app);
-var io = require('socket.io')(server);
-var sharedsession = require("express-socket.io-session")(session)
-io.use(sharedsession)
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,11 +26,15 @@ app.use(cookieParser());
 app.use(session)
 app.use(express.static(path.join(__dirname, 'public')));
 
+var server = http.createServer(app);
+var io = require('socket.io')(server);
+var sharedsession = require("express-socket.io-session")(session)
+io.use(sharedsession)
 
 var indexRouter = require('./routes/index')(io, sharedsession);
 var twineRouter = require('./routes/twines')(io, sharedsession);
 
-app.use('/index', indexRouter);
+app.use('/', indexRouter);
 app.use('/tw', twineRouter);
 
 
