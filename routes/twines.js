@@ -6,10 +6,11 @@ var models = require("../models.js")
 
 var router = express.Router();
 
-function getTwineRouter(io){
+function getTwineRouter(io,sharedsession){
 
 	/* GET users listing. */
 	router.get('/:twine_id', function(req, res, next) {
+		console.log(req.session)
 		models.StoryModel.find({_id:req.params.twine_id}).exec(function(err, doc){
 			if(err | doc.length == 0){
 				res.sendStatus(404)
@@ -40,8 +41,16 @@ function getTwineRouter(io){
 
 
 	twine_sockets = io.of(/^\/tw\/\S+/gm)
+	twine_sockets.use(sharedsession)
 	twine_sockets.on("connection", function(socket){
+		//the client is uniquely defined by the story id and the user id- 
+		// the user id is isomorphic with the session id
+		// so if the session id is in the socket def
+		// we can identify and or create a client here , and send it back to the browser
 		var story_id = socket.nsp.name.split("/")[2]
+		console.log(socket.handshake.session)
+		console.log(story_id)
+
 	})
 
 	return router

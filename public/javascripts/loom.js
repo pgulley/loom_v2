@@ -12,7 +12,7 @@ function loom_manager(){
 
 	this.socket = io(`/tw/${this.story_id}`)
 	this.socket.on("connect", function(){
-		console.log("we connected")
+		console.log("connected!")
 	})
 
 	this.page_change = function(event){

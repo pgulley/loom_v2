@@ -4,7 +4,7 @@ var router = express.Router();
 var models = require("../models.js")
 
 
-function getIndexRouter(io){
+function getIndexRouter(io,sharedsession){
 	//get the index page
 	router.get('/', function(req, res, next) {
 
