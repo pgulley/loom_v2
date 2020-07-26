@@ -37,6 +37,7 @@ const ClientSchema = new mongoose.Schema({
 	story: mongoose.ObjectId,
 	user: mongoose.ObjectId,
 	session: String,
+	name: String,
 	current_passage_id: String,
 	story_vars: String
 })
