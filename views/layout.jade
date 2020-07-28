@@ -3,11 +3,43 @@ html
 	head
 		title Loom | index
 		link(rel='shortcut icon', type='image/x-icon', href="/images/favicon.ico")
+		
+		link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
+
+		script(type="text/javascript" src="/javascripts/jquery.min.js")
+		script(type="text/javascript" src="/javascripts/bootstrap.bundle.min.js")
+		script(type="text/javascript" src="/javascripts/index.js")
 	body
 		div(class="header")
 			img(src="/images/favicon.ico", class="logo_image") 
 			h1 Loom
 			div(class="user_slug")
-				a logon
+				a(class="login_button") login 
+
+		div(class="modal" id="login_modal" tabindex="-1" role="dialog")
+			div(class="modal-dialog", role="document")
+				div(class="modal-content", id="login_modal_content")
+					div(class="modal-body")
+						ul(class="nav nav-tabs" id="login_tabs" role="tablist")
+							li(class="nav-item")
+								a(class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab"  aria-controls="login" aria-selected="true") Login
+							li(class="nav-item")
+								a(class="nav-link" id="create-tab" data-toggle="tab" href="#create" role="tab"  aria-controls="create" aria-selected="true") Create User
+						div(class="tab-content" id="login_tab_content")
+							div(class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab")
+								label(for="uname") Username
+								input(type="text" id="uname" name="uname" value="")
+								label(for="pword") Password 
+								input(type="password" id="pword" name="pword" value="")
+								div(id="login_errors")
+								button(id="submit") Login 
+							div(class="tab-pane fade" id="create" role="tabpanel" aria-labelledby="create-tab")
+								label(for="create_uname") Username
+								input(type="text" id="create_uname" name="create_uname" value="")
+								label(for="create_pword") Password 
+								input(type="password" id="create_pword" name="create_pword" value="")
+								div(id="create_user_errors")
+								button(id="create_user") Create 
+
 		block content
