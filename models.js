@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-var ShortId = require('mongoose-shortid-nodeps')
+const bcrypt = require("bcrypt")
+const SALT_WORK_FACTOR = 10
 
 mongoose.connect('mongodb://localhost/test', {useNewUrlParser: true});
 const db = mongoose.connection;
@@ -22,6 +23,7 @@ const StorySchema = new mongoose.Schema({
 		size:String,
 		links:[String]
 	}],
+	access:{type: String, default: "public"},
 	clients: [mongoose.ObjectId],
 	events: [mongoose.ObjectId]
 })
@@ -58,8 +60,8 @@ const EventModel = mongoose.model("Event", EventSchema)
 
 ////this is stubbed out according to expectation but not built out yet
 const UserSchema = new mongoose.Schema({
-	username: String,
-	password: String,
+	username: {type:String, required:true, index:{unique:true}},
+	password: {type:String, required:true},
 	clients: [mongoose.ObjectId],
 	stories:[{
 		story_id:mongoose.ObjectId,
@@ -67,6 +69,36 @@ const UserSchema = new mongoose.Schema({
 	}],
 	admin:Boolean
 })
+
+UserSchema.pre('save', function(next) {
+    var user = this;
+
+    // only hash the password if it has been modified (or is new)
+    if (!user.isModified('password')) return next();
+
+    // generate a salt
+    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+        if (err) return next(err);
+
+        // hash the password using our new salt
+        bcrypt.hash(user.password, salt, function(err, hash) {
+            if (err) return next(err);
+
+            // override the cleartext password with the hashed one
+            user.password = hash;
+            next();
+        });
+    });
+});
+
+UserSchema.methods.comparePassword = function(candidatePassword, cb) {
+	console.log("compare")
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+        if (err) return cb(err);
+        cb(null, isMatch);
+    });
+};
+
 
 const UserModel = mongoose.model("User", UserSchema)
 

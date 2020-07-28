@@ -6,7 +6,7 @@ var session = require('express-session')({
     secret: "temp-secret",
     resave: true,
     saveUninitialized: true,
-    cookie: { secure: true }
+    //cookie: { secure: true }
   })
 
 var logger = require('morgan');

@@ -9,13 +9,17 @@ html
 
 		script(type="text/javascript" src="/javascripts/jquery.min.js")
 		script(type="text/javascript" src="/javascripts/bootstrap.bundle.min.js")
+		script(type="text/javascript" src="/javascripts/socket.io.js")
 		script(type="text/javascript" src="/javascripts/index.js")
 	body
 		div(class="header")
 			img(src="/images/favicon.ico", class="logo_image") 
 			h1 Loom
 			div(class="user_slug")
-				a(class="login_button") login 
+				if logged_in
+					p #{user} | <a href="/logout"> logout </a>
+				else
+					a(class="login_button") login 
 
 		div(class="modal" id="login_modal" tabindex="-1" role="dialog")
 			div(class="modal-dialog", role="document")
@@ -33,7 +37,7 @@ html
 								label(for="pword") Password 
 								input(type="password" id="pword" name="pword" value="")
 								div(id="login_errors")
-								button(id="submit") Login 
+								button(id="login_user") Login 
 							div(class="tab-pane fade" id="create" role="tabpanel" aria-labelledby="create-tab")
 								label(for="create_uname") Username
 								input(type="text" id="create_uname" name="create_uname" value="")

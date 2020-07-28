@@ -20,7 +20,6 @@ function loom_manager(){
 			this.change_page({content:{id:current_passage}})
 		}else{
 			this.client = client
-			console.log(this.client)
 			//no need to nav if the server is just reconnecting
 		}
 		
@@ -81,7 +80,7 @@ function loom_manager(){
 		$(".loom_ui").empty().append(loom.debug_ui())
 	}
 
-	//----- keep the socket definitions separated from the actual object functions
+	//----- keep the socket routing separated from the actual object functions
 
 	this.socket = io(`/tw/${this.story_id}`)
 

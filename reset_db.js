@@ -32,5 +32,7 @@ fs.readFile("twines/twine.html", "utf8", function(err, data){
 			console.log("Uploaded default twine")
 		})
 	}
+	admin = new models.UserModel({username:"admin", password:"secret_sauce"})
+	admin.save()
 	
 })

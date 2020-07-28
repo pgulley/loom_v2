@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "bluebird": "^3.7.2",
     "clean-css": ">=4.1.11",
     "constantinople": ">=3.1.1",
