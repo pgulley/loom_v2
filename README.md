@@ -6,7 +6,7 @@ What if Twine stories could be multiplayer?
 Loom is a very simple platform that serves mutant multiplayer twines.
 We inject some extra code into the story, and the server keeps track of user presense as you navigate the story tree.
 
-This is a re-write of [this project]("https://github.com/pgulley/loom/stargazers") using node.js as the backend instead of python
+This is a re-write of [this project]("https://github.com/pgulley/loom") using node.js as the backend instead of python
 
 
 ### What's it for??
