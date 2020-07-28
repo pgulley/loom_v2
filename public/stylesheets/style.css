@@ -1,8 +1,53 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
+@font-face{
+	font-family:Chapaza;
+	src:url("/fonts/Chapaza.ttf") format("truetype");
 }
 
-a {
-  color: #00B7FF;
+body{
+	font-family:Chapaza;
+	background-image:linear-gradient(white, #49455375);
+	margin:0px;
+
+}
+
+
+.header{
+	border-bottom: 2px solid black;
+	height:60px;
+}
+
+.logo_image{
+	height:45px;
+	margin-top:5px;
+	margin-left:5px;
+}
+
+h1{
+	display:inline-block;
+	padding-left:0px;
+	margin-bottom:5px;
+}
+
+.user_slug{
+	display:inline-block;
+	float:right;
+	margin-right:10px;
+	margin-top:10px;
+	font-style:italic;
+	font-size:1em;
+}
+
+.main_content{
+	margin-top:10px;
+	padding-left:10px;
+	height:1000px;
+}
+
+.story_block{
+	margin:10px;
+	margin-left:0px;
+	padding:5px;
+	border: 2px solid black;
+	width:50%;
 }

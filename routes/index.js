@@ -14,6 +14,13 @@ function getIndexRouter(io,sharedsession){
 		})
 	});
 
+	
+	//login
+	//logout
+	//create story
+	//create user
+
+
 	return router
 
 }

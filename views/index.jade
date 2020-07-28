@@ -1,9 +1,10 @@
 extends layout
 
 mixin story_block(story)
-	div(class="story")
-	a(href='/tw/#{story._id}'): h2 #{story['title']}
+	div(class="story_block")
+		a(href='/tw/#{story._id}'): h2 #{story['title']}
 
 block content
-	each story in Story_List
-		+story_block(story)
+	div(class="main_content")
+		each story in Story_List
+			+story_block(story)

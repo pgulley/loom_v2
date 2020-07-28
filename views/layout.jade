@@ -1,8 +1,13 @@
 doctype html
 html
 	head
-		title= Loom
+		title Loom | index
+		link(rel='shortcut icon', type='image/x-icon', href="/images/favicon.ico")
 		link(rel='stylesheet', href='/stylesheets/style.css')
 	body
-		h1 Loom
+		div(class="header")
+			img(src="/images/favicon.ico", class="logo_image") 
+			h1 Loom
+			div(class="user_slug")
+				a logon
 		block content
