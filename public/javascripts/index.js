@@ -30,27 +30,21 @@ $(window).ready(function(){
 	})
 
 	$("#create_user").click(function(){
+		$("#create_user_errors")[0].innerHTML = ""
 		var uname = $("#create_uname").val()
 		var pass = $("#create_pword").val()
 		if(uname!="" && pass!=""){
-			socket.emit("attempt_create", {username:uname, password:pass})
+			$.post("/create_user", {username:uname, password:pass, log_in:true})
+			.then(function(data){
+				if(data.status=="OK"){
+					location.reload()
+				}else{
+					$("#create_user_errors")[0].innerHTML = data.error
+				}
+			})
 		}else{
-			$("#login_errors")[0].innerHTML = "field cannot be empty"
+			$("#create_user_errors")[0].innerHTML = "field cannot be empty"
 		}
 	})
-
-	socket.on("login_response",function(data){
-		if(data.status=="OK"){
-			$.post({url:"/login", data:data.credentials})
-		}else{
-			$("#login_errors")[0].innerHTML = data.error
-		}
-	})
-
-	socket.on("create_response", function(data){
-		//if success, refresh
-		//if failure, display error
-	})
-
 })
 

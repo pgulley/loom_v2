@@ -46,6 +46,22 @@ function getIndexRouter(io,sharedsession){
 			})
 	})
 
+	router.post("/create_user", function(req,res){
+		const credentials = req.body
+		var new_user = new models.UserModel({username:credentials.username, password:credentials.password})
+		new_user.save(function(err){
+			if(err){
+				res.send({status:"FAIL", error:"Username Not Unique"})
+			}else{
+				if(credentials.log_in){
+					req.session.logged_in = true
+					req.session.user = new_user._id
+				}
+				res.send({status:"OK"})
+			}
+		})
+	})
+
 	router.get("/logout", function(req, res, next){
 		req.session.logged_in = false
 		req.session.user = undefined
