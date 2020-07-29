@@ -1,5 +1,6 @@
 Loom! (v2)
 ==========
+![Loom Header](/readme_images/loom_logo.jpg)
 
 What if Twine stories could be multiplayer?
 
