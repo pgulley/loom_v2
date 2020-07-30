@@ -4,10 +4,15 @@
 	src:url("/fonts/Chapaza.ttf") format("truetype");
 }
 
+html{
+	height:100%;
+}
+
 body{
 	font-family:Chapaza;
 	background-image:linear-gradient(white, #49455375);
 	margin:0px;
+	height:100%;
 
 }
 
@@ -42,7 +47,6 @@ h1{
 .main_content{
 	margin-top:10px;
 	padding-left:10px;
-	height:1000px;
 }
 
 .story_block{
@@ -91,4 +95,24 @@ input{
 
 button{
 	margin-top:10px;
+}
+
+.admin_panel{
+	width:100%;
+	border-top:3px solid black;
+	padding:10px;
+}
+
+div.user_list{
+	padding:10px;
+	width:50%;
+	border: 2px solid black;
+}
+
+th{
+	padding-left:10px;
+}
+
+tr{
+	border-bottom:1px solid black;
 }

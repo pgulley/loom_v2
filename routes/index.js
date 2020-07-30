@@ -10,7 +10,13 @@ function getIndexRouter(io,sharedsession){
 		if(req.session.logged_in == true){
 			models.UserModel.findOne({_id:req.session.user}, function(err, user){
 				user.getStories(function(docs){
-					res.render('index', { title: 'home', Story_List:docs, logged_in:true, user:user});
+					if(user.admin){
+						models.UserModel.find({}).exec(function(err, all_users){
+							res.render('index', { title: 'home', Story_List:docs, logged_in:true, user:user, all_users:all_users});
+						})
+					}else{
+						res.render('index', { title: 'home', Story_List:docs, logged_in:true, user:user});
+					}
 				})
 			} )
 		}else{
@@ -22,6 +28,7 @@ function getIndexRouter(io,sharedsession){
 
 	});
 
+	//upload and validate new twine stories
 	router.post("/create_new_story", function(req,res){
 		const story = req.body
 		processTwine.validateTwine(story.raw_twine, function(errs, raw){
@@ -78,6 +85,19 @@ function getIndexRouter(io,sharedsession){
 				}
 				res.send({status:"OK"})
 			}
+		})
+	})
+
+	router.post("/edit_user", function(req, res){
+		models.UserModel.findOne({_id:req.body.user_id}).exec(function(err, user){
+			switch (req.body.action){
+				case "toggle_admin":
+					user.admin = !user.admin
+					break
+			}
+			user.save(function(err){
+				res.send({status:"OK"})
+			})
 		})
 	})
 

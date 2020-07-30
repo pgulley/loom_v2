@@ -4,6 +4,21 @@ mixin story_block(story)
 	div(class="story_block")
 		a(href='/tw/#{story._id}'): h2 #{story['title']}
 
+mixin user_block(u)
+	- var is_self = u._id == user.id
+
+	tr 
+		td #{u.username}
+		if u.admin == true 
+			if is_self
+				td: input(type="checkbox" class="admin_check" value="#{u._id}" checked disabled)
+			else
+				td: input(type="checkbox" class="admin_check" value="#{u._id}" checked)
+		else
+			td: input(type="checkbox" class="admin_check" value="#{u._id}")
+
+
+
 block content
 	div(class="main_content")
 		if logged_in
@@ -21,3 +36,17 @@ block content
 
 		each story in Story_List
 			+story_block(story)
+
+	if logged_in
+		if user.admin
+			div(class="admin_panel")
+				div(class="user_list")
+					h3 Users
+					table(class="users_list")
+						thead
+							tr
+								th Username
+								th Admin
+						tbody
+							each u in all_users
+								+user_block(u)

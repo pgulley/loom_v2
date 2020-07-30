@@ -1,13 +1,12 @@
 $(window).ready(function(){
 	var socket = io("/index")
 	socket.on('connect', function() {
-		console.log("connected!")
+		//do i need this tho?
 	})
 
 	$('#login_modal').modal({"show":false})
 
 	$(".login_button").click(function(){
-		console.log("button")
 		$('#login_modal').modal("show")
 	})
 
@@ -18,7 +17,7 @@ $(window).ready(function(){
 		if(uname!="" && pass!=""){
 			$.post("/login", {username:uname, password:pass})
 			.then(function(data){
-				if(data.status=="OK"){
+				if(data.status == "OK"){
 					location.reload()
 				}else{
 					$("#login_errors")[0].innerHTML = data.error
@@ -36,7 +35,7 @@ $(window).ready(function(){
 		if(uname!="" && pass!=""){
 			$.post("/create_user", {username:uname, password:pass, log_in:true})
 			.then(function(data){
-				if(data.status=="OK"){
+				if(data.status == "OK"){
 					location.reload()
 				}else{
 					$("#create_user_errors")[0].innerHTML = data.error
@@ -56,18 +55,25 @@ $(window).ready(function(){
 			//probably ajax instead of socket, right? for this application?
 			$.post("/create_new_story", {"raw_twine":raw_twine, "access_scheme":auth_scheme })
 			.then(function(data){
-				if(data.status=="OK"){
+				if(data.status =="OK"){
 					location.reload()
 				}else{
 					$("#upload_errors")[0].innerHTML = data.errors.join("</br>")
 				}
-				console.log(data)
-				//something got returned
 			})
 		}
 		var twine_file = $("#upload_new_twine").prop("files")[0]
 		var story_id = twine_file.name.split(".")[0]
 		fr.readAsText(twine_file)
+	})
+
+	$(".admin_check").change(function(){
+		$.post("/edit_user", {user_id:this.value, action:"toggle_admin"})
+		.then(function(data){
+			if(data.status == "OK"){
+				console.log("OK")
+			}
+		})
 	})
 })
 
