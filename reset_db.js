@@ -26,7 +26,7 @@ fs.readFile("twines/twine.html", "utf8", function(err, data){
 	admin = new models.UserModel({username:"admin", password:"secret_sauce", admin:true})
 	admin.save(function(err){
 			console.log("created admin user")
-			process_twine(data, function(processed){
+			process_twine.processTwine(data, function(processed){
 			new_story = new models.StoryModel(processed)
 	
 			new_story.save()

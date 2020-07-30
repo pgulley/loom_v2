@@ -104,14 +104,11 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 UserSchema.methods.getStories = function(cb){
 	if(this.admin){
-		console.log("user is admin")
 		StoryModel.find({}).exec(function(err, docs){
-			console.log(err, docs)
 			cb(docs)
 		})
 	}
 	else{
-		console.log("user aint admin")
 		var user_stories = _.flatMap(this.stories, function(s){return s.story_id})
 		if(user_stories.length > 0){
 			//get every public story, then also every story that this user has access to.

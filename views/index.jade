@@ -6,5 +6,18 @@ mixin story_block(story)
 
 block content
 	div(class="main_content")
+		if logged_in
+			div(class="upload_block")
+				h3 Upload New Story
+				input(type="file" accept=".html" id="upload_new_twine")
+				div(class="access_scheme_input")
+					| Set Access Scheme (this can be changed later) </br>
+					select(name="access" id="access")
+						option(id="access_public" value="public" ) Public (Anyone can access- no log-in required) 
+						option(id="access_semi" value="semi") Semi Public (Any registered user can access) 
+						option(id="access_private" value="private") Private (An invitation is required to view the story. )
+				div(id="upload_errors")
+				button(id="submit_new_twine") Upload
+
 		each story in Story_List
 			+story_block(story)

@@ -2,6 +2,8 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser')
+
 var session = require('express-session')({
     secret: "temp-secret",
     resave: true,
@@ -21,8 +23,9 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false, limit: '500mb' }));
 app.use(cookieParser());
+app.use(bodyParser.json({limit: '500mb'}));
 app.use(session)
 app.use(express.static(path.join(__dirname, 'public')));
 

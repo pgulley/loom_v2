@@ -46,5 +46,28 @@ $(window).ready(function(){
 			$("#create_user_errors")[0].innerHTML = "field cannot be empty"
 		}
 	})
+
+	$(document).on("click", "#submit_new_twine", function(){
+		$("#upload_errors")[0].innerHTML = ""
+		var fr = new FileReader
+		fr.onload = function(e){
+			var auth_scheme = $("select[name='access']").val()
+			var raw_twine = e.target.result
+			//probably ajax instead of socket, right? for this application?
+			$.post("/create_new_story", {"raw_twine":raw_twine, "access_scheme":auth_scheme })
+			.then(function(data){
+				if(data.status=="OK"){
+					location.reload()
+				}else{
+					$("#upload_errors")[0].innerHTML = data.errors.join("</br>")
+				}
+				console.log(data)
+				//something got returned
+			})
+		}
+		var twine_file = $("#upload_new_twine").prop("files")[0]
+		var story_id = twine_file.name.split(".")[0]
+		fr.readAsText(twine_file)
+	})
 })
 

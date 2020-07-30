@@ -1,15 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
+var processTwine = require("../process_twine.js")
 var models = require("../models.js")
-
 
 function getIndexRouter(io,sharedsession){
 	//get the index page
 	router.get('/', function(req, res, next) {
-		//find all, for now. 
-		console.log(req.session)
-		console.log(req.session.logged_in)
 		if(req.session.logged_in == true){
 			models.UserModel.findOne({_id:req.session.user}, function(err, user){
 				user.getStories(function(docs){
@@ -25,6 +22,29 @@ function getIndexRouter(io,sharedsession){
 
 	});
 
+	router.post("/create_new_story", function(req,res){
+		const story = req.body
+		processTwine.validateTwine(story.raw_twine, function(errs, raw){
+			if(errs.length > 0){
+				res.send({status:"FAIL", errors:errs})
+			}else{
+				processTwine.processTwine(raw, function(processed){
+					new_story = new models.StoryModel(processed)
+					new_story.access = story.access_scheme
+					new_story.author = req.session.user
+					models.UserModel.findOne({_id:req.session.user}, function(err, user){
+						user.stories.push({story_id:new_story._id, admin:true})
+						user.save(function(err){
+							new_story.save(function(err){
+								res.send({status:"OK"})
+							})
+						})
+					})
+				})
+			}
+		}) 
+	})
+
 	router.post("/login", function(req,res){
 		const credentials = req.body
 		models.UserModel.findOne({username:credentials.username}, function(err, user){
@@ -33,7 +53,6 @@ function getIndexRouter(io,sharedsession){
 						if(match){
 							req.session.logged_in = true
 							req.session.user = user._id
-							console.log(req.session)
 							res.send({status:"OK"})
 							
 						}else{
@@ -68,22 +87,12 @@ function getIndexRouter(io,sharedsession){
 		res.redirect("/")
 	})
 
+	//all this may be unnesecary...
 	index_sockets = io.of("/index")
 	index_sockets.use(sharedsession)
 	index_sockets.on("connection", function(socket){
 		
-		//when an outside user tries to 'create' a user
-		socket.on("attempt_create",function(credentials){
-			//check uname not dup
-			//create
-		})
-
-
-		//create story
-		
-
 	})
-
 
 	return router
 
