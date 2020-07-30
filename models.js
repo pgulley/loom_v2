@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt")
+const _ = require("lodash")
 const SALT_WORK_FACTOR = 10
 
 mongoose.connect('mongodb://localhost/test', {useNewUrlParser: true});
@@ -15,6 +16,8 @@ db.once('open', function() {
 // and a list of all the clients (story-specific user models) and events
 const StorySchema = new mongoose.Schema({
 	title: String,
+	description: String,
+	author: mongoose.ObjectId,
 	raw_text: String,
 	passages: [{
 		passage_id:String,
@@ -92,13 +95,37 @@ UserSchema.pre('save', function(next) {
 });
 
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-	console.log("compare")
+
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
         if (err) return cb(err);
         cb(null, isMatch);
     });
 };
 
+UserSchema.methods.getStories = function(cb){
+	if(this.admin){
+		console.log("user is admin")
+		StoryModel.find({}).exec(function(err, docs){
+			console.log(err, docs)
+			cb(docs)
+		})
+	}
+	else{
+		console.log("user aint admin")
+		var user_stories = _.flatMap(this.stories, function(s){return s.story_id})
+		if(user_stories.length > 0){
+			//get every public story, then also every story that this user has access to.
+			StoryModel.find({$or: [{access:["public","semi"]} , {  _id:[user_stories] }] }).exec(function(err, docs){
+				cb(docs)
+			})
+		}else{
+			StoryModel.find({access:["public","semi"] }).exec(function(err, docs){
+				cb(docs)
+			})
+		}
+		
+	}
+}
 
 const UserModel = mongoose.model("User", UserSchema)
 

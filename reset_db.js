@@ -21,18 +21,17 @@ models.UserModel.deleteMany({}, function(){
 
 
 fs.readFile("twines/twine.html", "utf8", function(err, data){
-	if(err){
-		console.log(err)
-	}
-	else{
-		process_twine(data, function(processed){
+
+
+	admin = new models.UserModel({username:"admin", password:"secret_sauce", admin:true})
+	admin.save(function(err){
+			console.log("created admin user")
+			process_twine(data, function(processed){
 			new_story = new models.StoryModel(processed)
-			console.log(new_story._id)
+	
 			new_story.save()
 			console.log("Uploaded default twine")
 		})
-	}
-	admin = new models.UserModel({username:"admin", password:"secret_sauce"})
-	admin.save()
+	})
 	
 })

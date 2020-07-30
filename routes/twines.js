@@ -109,8 +109,7 @@ function getTwineRouter(io,sharedsession){
 			})	
 		})
 
-		//Do some cleanup when the client leaves
-		//doesn't always work. 
+
 		socket.on("disconnect", function(event){
 			var session_id = socket.handshake.sessionID
 			models.ClientModel.findOne({session:socket.handshake.sessionID}, function(err, client){

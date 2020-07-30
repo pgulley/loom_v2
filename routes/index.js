@@ -12,13 +12,13 @@ function getIndexRouter(io,sharedsession){
 		console.log(req.session.logged_in)
 		if(req.session.logged_in == true){
 			models.UserModel.findOne({_id:req.session.user}, function(err, user){
-				models.StoryModel.find({}).exec(function(err, docs){
-					res.render('index', { title: 'home', Story_List:docs, logged_in:true, user:user.username});
+				user.getStories(function(docs){
+					res.render('index', { title: 'home', Story_List:docs, logged_in:true, user:user});
 				})
 			} )
 		}else{
 			//some stories are public
-			models.StoryModel.find({}).exec(function(err, docs){
+			models.StoryModel.find({access:"public"}).exec(function(err, docs){
 				res.render('index', { title: 'home', Story_List:docs, logged_in:false});
 			})
 		}
